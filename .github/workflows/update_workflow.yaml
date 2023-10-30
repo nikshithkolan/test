@@ -47,6 +47,9 @@ jobs:
               echo "folder: $folder"
               manifest_file="manifest.json"   
               if [ -f "$manifest_file" ]; then
+                typee=$(jq -r '.schema' "$manifest_file")
+                echo "typee: $typee" 
+
                 type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
                 name=$(jq -r '.name' "$manifest_file")
                 title=$(jq -r '.title' "$manifest_file")
@@ -71,6 +74,7 @@ jobs:
                     exit 1
                 fi
               fi
+            
             python publish.py --repo-dir "$folder" --title "$title" --name "$name" --title "$title" --description "$description" --type "$type" --version "$version" --logo "$logo"
             fi
           done          
