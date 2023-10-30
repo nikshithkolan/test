@@ -37,30 +37,40 @@ jobs:
               echo "file: $file"
               folder=$(dirname "$file")
               echo "folder: $folder"
+              manifest_file="manifest.json"
+              iconImage="logo.png"
+                
+              if [ -f "$manifest_file" ]; then
+                type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
+                name=$(jq -r '.name' "$manifest_file")
+                title=$(jq -r '.title' "$manifest_file")
+                description=$(jq -r '.description' "$manifest_file")
+                version=$(jq -r '.version' "$manifest_file")
+
+                echo "$type : $name : $title : $description : $version"
+                
+                if [ -z "$repo" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] ; then
+                    echo "Error: One or more required fields are empty or not found in $manifest_file"
+                    exit 1
+                fi
+              fi
+
+
+
+
             fi
           done
+
+        
+          
           IFS="$original_ifs"
+
+
 
           # for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.ssp$'); do          
           #   echo "file: $file"
           #   repo=$(dirname "$file")
           #   echo "repo: $repo"
-          #   manifest_file="manifest.json"
-          #   iconImage="logo.png"
-            
-          #   if [ -f "$manifest_file" ]; then
-          #     echo "performing ls on repo"
-          #     type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
-          #     name=$(jq -r '.name' "$manifest_file")
-          #     title=$(jq -r '.title' "$manifest_file")
-          #     description=$(jq -r '.description' "$manifest_file")
-          #     version=$(jq -r '.version' "$manifest_file")
-          #     iconImage=$(jq -r '.iconImage' "$manifest_file")
-              
-          #     if [ -z "$repo" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] || [ -z "$iconImage" ]; then
-          #         echo "Error: One or more required fields are empty or not found in $manifest_file"
-          #         exit 1
-          #     fi
 
           #     if [ -n "$repo_dir" ]; then
           #       echo "running publish script"
