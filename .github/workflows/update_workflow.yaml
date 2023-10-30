@@ -63,7 +63,10 @@ jobs:
                 convert "$logo" -resize 240x240! "$logo"
                 echo "Resized logo.png to 240x240 pixels"
               else
-                echo "logo.png not found in $folder"
+                  echo "Current Working Directory: $(pwd)"
+                  echo "logo.png not found in $folder"
+                  echo "Listing files in $folder:"
+                  ls -lah "$folder"
               fi
 
             fi
