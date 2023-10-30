@@ -28,6 +28,8 @@ jobs:
             repo=$(dirname "$file")
             manifest_file="$repo/manifest.json"
             iconImage="$repo/logo.png"
+            echo "$manifest_file"
+            echo "manifest_file"
             
             if [ -f "$manifest_file" ]; then
               echo "in manifest if"
