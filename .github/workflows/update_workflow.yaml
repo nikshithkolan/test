@@ -1,12 +1,11 @@
 name: Update version
-on:
-  push:
-    branches:
-      - main
-      - branchtest
-    paths:
-      - '**.ssp'
-      - '**/manifest.json'
+on: push
+    # branches:
+    #   - main
+    #   - branchtest
+    # paths:
+    #   - '**.ssp'
+    #   - '**/manifest.json'
 jobs:
   version-the-ssp:
     runs-on: ubuntu-latest
