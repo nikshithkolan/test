@@ -24,7 +24,7 @@ jobs:
       - name: Publish to Marketplace
         run: |
           echo "starting for loop"
-          for file in $(grep '\.ssp$'); do          
+          for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.ssp$'); do          
             repo=$(dirname "$file")
             manifest_file="$repo/manifest.json"
             iconImage="$repo/logo.png"
