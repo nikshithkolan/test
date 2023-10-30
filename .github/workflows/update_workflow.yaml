@@ -26,8 +26,8 @@ jobs:
           echo "starting for loop"
           for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.ssp$'); do          
             repo=$(dirname "$file")
-            manifest_file="$repo/manifest.json"
-            iconImage="$repo/logo.png"
+            manifest_file="$manifest.json"
+            iconImage="$logo.png"
             echo "$manifest_file"
             echo "manifest_file"
             
