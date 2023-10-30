@@ -58,8 +58,14 @@ jobs:
                 fi
               fi
 
-
-
+              logo="logo.png"
+              if [[ -f "$logo" ]]; then
+                # Resize logo.png to 240x240 pixels
+                convert "$logo" -resize 240x240! "$logo"
+                echo "Resized logo.png to 240x240 pixels"
+              else
+                echo "logo.png not found in $folder"
+              fi
 
             fi
           done
