@@ -23,9 +23,6 @@ jobs:
 
       - name: Publish to Marketplace
         run: |
-          publish_url=https://<marketplace_url>
-          username=${{ secrets.username }}
-          password=${{ secrets.password }}
 
           for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.ssp$'); do          
             repo=$(dirname "$file")
@@ -55,15 +52,10 @@ jobs:
             fi
           done
 
-          for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.ssp$'); do
-            python publish.py --repo-dir <get from manifest.json>
-          done
-
-
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Github Action"
           git add -A
-          git commit -m "Created version" || echo "No changesn to commit"
+          git commit -m "Created version" || echo "No changes to commit"
           git push
