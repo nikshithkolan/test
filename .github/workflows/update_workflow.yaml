@@ -19,7 +19,7 @@ jobs:
           python-version: '3.x'
       
       - name: Install jq
-        run: sudo apt install jq
+        run: sudo apt install  -y imagemagick jq
 
       - name: Publish to Marketplace
         run: |
@@ -39,9 +39,9 @@ jobs:
               echo "folder: $folder"
               manifest_file="manifest.json"
               iconImage="logo.png"
-              echo "ls"
-              ls $folder   
-              manifest="manifest.json"           
+              manifest_file="manifest.json"   
+              convert "$iconImage" -resize 240x240! "$iconImage"
+              # find . -type f \( -iname \*.jpg -o -iname \*.png \) -exec convert {} -resize 240x240! {} \;        
               if [ -f "$manifest_file" ]; then
                 echo "inside manifest"
                 type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
