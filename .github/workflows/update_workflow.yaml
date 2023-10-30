@@ -1,4 +1,4 @@
-name: Update Connector Actions CSVs
+name: Update version
 on:
   push:
     branches:
