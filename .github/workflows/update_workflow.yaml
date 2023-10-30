@@ -32,8 +32,7 @@ jobs:
             iconImage="logo.png"
             
             if [ -f "$manifest_file" ]; then
-              echo "in manifest if"
-              ls test_vic
+              echo "performing ls on repo"
               type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
               name=$(jq -r '.name' "$manifest_file")
               title=$(jq -r '.title' "$manifest_file")
