@@ -50,7 +50,7 @@ jobs:
                 typee=$(jq -r '.schema' "$manifest_file")
                 echo "typee: $typee" 
 
-                type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
+                type="component"
                 name=$(jq -r '.name' "$manifest_file")
                 title=$(jq -r '.title' "$manifest_file")
                 description=$(jq -r '.description' "$manifest_file")
