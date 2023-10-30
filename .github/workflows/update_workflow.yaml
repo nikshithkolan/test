@@ -26,6 +26,9 @@ jobs:
       - name: Install jq
         run: sudo apt install  -y imagemagick jq
 
+      - name: Install requstes
+        run: pip3 install -r requirements.txt
+
       - name: Publish to Marketplace
         run: |
           echo "starting for loop"
