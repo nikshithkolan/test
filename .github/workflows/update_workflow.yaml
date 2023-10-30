@@ -37,11 +37,9 @@ jobs:
               echo "file: $file"
               folder=$(dirname "$file")
               echo "folder: $folder"
-              manifest_file="manifest.json"
-              iconImage="logo.png"
               manifest_file="manifest.json"   
               # convert "$iconImage" -resize 240x240! "$iconImage"
-              find . -type f \( -iname \*.jpg -o -iname \*.png \) -exec convert {} -resize 240x240! {} \;        
+              # find . -type f \( -iname \*.jpg -o -iname \*.png \) -exec convert {} -resize 240x240! {} \;        
               if [ -f "$manifest_file" ]; then
                 echo "inside manifest"
                 type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
@@ -57,6 +55,7 @@ jobs:
                     exit 1
                 fi
               fi
+              ls $folder
 
               logo="logo.png"
               if [[ -f "$logo" ]]; then
