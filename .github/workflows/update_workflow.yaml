@@ -1,11 +1,16 @@
 name: Update version
-on: push
+on: 
+  push:
     # branches:
     #   - main
     #   - branchtest
-    # paths:
-    #   - '**.ssp'
-    #   - '**/manifest.json'
+    
+    paths:
+      - '**.ssp'
+      - '**/manifest.json'
+      - '**/logo.png'
+      - '**/logo.jpeg'
+      - '**/logo.jpg'      
 jobs:
   version-the-ssp:
     runs-on: ubuntu-latest
@@ -55,9 +60,8 @@ jobs:
                     exit 1
                 fi
               fi
-              ls $folder
 
-              logo="logo.png"
+              logo="$folder/logo.png"
               if [[ -f "$logo" ]]; then
                 # Resize logo.png to 240x240 pixels
                 convert "$logo" -resize 240x240! "$logo"
@@ -101,3 +105,5 @@ jobs:
           git add -A
           git commit -m "Created version" || echo "No changes to commit"
           git push
+
+
