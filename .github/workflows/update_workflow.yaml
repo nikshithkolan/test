@@ -40,8 +40,8 @@ jobs:
               manifest_file="manifest.json"
               iconImage="logo.png"
               manifest_file="manifest.json"   
-              convert "$iconImage" -resize 240x240! "$iconImage"
-              # find . -type f \( -iname \*.jpg -o -iname \*.png \) -exec convert {} -resize 240x240! {} \;        
+              # convert "$iconImage" -resize 240x240! "$iconImage"
+              find . -type f \( -iname \*.jpg -o -iname \*.png \) -exec convert {} -resize 240x240! {} \;        
               if [ -f "$manifest_file" ]; then
                 echo "inside manifest"
                 type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
