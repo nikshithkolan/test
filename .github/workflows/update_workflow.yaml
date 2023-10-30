@@ -26,10 +26,9 @@ jobs:
           echo "starting for loop"
           for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.ssp$'); do          
             repo=$(dirname "$file")
-            manifest_file="$manifest.json"
-            iconImage="$logo.png"
-            echo "$manifest_file"
-            echo "manifest_file"
+            echo "repo: $repo"
+            manifest_file="manifest.json"
+            iconImage="logo.png"
             
             if [ -f "$manifest_file" ]; then
               echo "in manifest if"
