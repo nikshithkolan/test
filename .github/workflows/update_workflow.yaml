@@ -24,6 +24,12 @@ jobs:
       - name: Publish to Marketplace
         run: |
           echo "starting for loop"
+
+          original_ifs="$IFS"
+
+          # Change IFS to newline to handle file names with spaces
+          IFS=$'\n'
+
           changed_files=$(git diff --name-only HEAD~1 HEAD)
 
           for file in $changed_files; do
@@ -33,6 +39,7 @@ jobs:
               echo "folder: $folder"
             fi
           done
+          IFS="$original_ifs"
 
           # for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.ssp$'); do          
           #   echo "file: $file"
