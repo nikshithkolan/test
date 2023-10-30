@@ -41,7 +41,7 @@ jobs:
               iconImage="logo.png"
               echo "ls"
               ls $folder   
-              manifest="$folder/manifest.json"           
+              manifest="manifest.json"           
               if [ -f "$manifest_file" ]; then
                 echo "inside manifest"
                 type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
