@@ -44,7 +44,7 @@ jobs:
                   folder=$(dirname "$file")
                   echo "folder: $folder"
                   echo "Current Working Directory: $(pwd)"
-                  cd $folder
+                  ls -a
                   manifest_file="manifest.json"   
                   if [ -f "$manifest_file" ]; then
                       echo "inside manifest"
