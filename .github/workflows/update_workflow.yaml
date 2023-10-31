@@ -44,7 +44,7 @@ jobs:
                   folder=$(dirname "$file")
                   echo "folder: $folder"
                   echo "Current Working Directory: $(pwd)"
-
+                  cd $folder
                   manifest_file="manifest.json"   
                   if [ -f "$manifest_file" ]; then
                       echo "inside manifest"
@@ -76,7 +76,7 @@ jobs:
                       fi
                       python publish.py --repo-dir "$folder" --title "$title" --name "$name" --title "$title" --description "$description" --type "$type" --version "$version" --logo "$logo"
                   fi
-
+                  cd -
               fi
           done          
           IFS="$original_ifs"
