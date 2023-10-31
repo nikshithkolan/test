@@ -18,6 +18,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token : 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
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -40,25 +41,23 @@ jobs:
 
           for file in $changed_files; do
               if [[ $file == *.ssp ]]; then
-                  echo "file: $file"
+                  # echo "file: $file"
                   folder=$(dirname "$file")
-                  echo "folder: $folder"
-                  echo "Current Working Directory: $(pwd)"
+                  # echo "folder: $folder"
+                  # echo "Current Working Directory: $(pwd)"
                   ls -a
                   cd $folder
                   repo=$(pwd)
                   manifest_file="manifest.json"   
                   if [ -f "$manifest_file" ]; then
-                      echo "inside manifest"
                       type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
                       name=$(jq -r '.name' "$manifest_file")
                       title=$(jq -r '.title' "$manifest_file")
                       description=$(jq -r '.description' "$manifest_file")
                       version=$(jq -r '.version' "$manifest_file")
-
                       logo="logo.png"
+
                       if [[ -f "$logo" ]]; then
-                          # Resize logo.png to 240x240 pixels
                           convert "$logo" -resize 240x240! "$logo"
                           echo "Resized logo.png to 240x240 pixels"
                       else
@@ -69,20 +68,17 @@ jobs:
                           exit 1
                       fi
 
-                      echo $folder $type $name $title $description $version
+                      # echo $folder $type $name $title $description $version
                       if [ -z "$folder" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] ; then
                           echo "Error: One or more required fields are empty or not found in $manifest_file"
                           exit 1
                       fi
-                  
                       python ../publish.py --repo-dir "$repo" --title "$title" --name "$name" --title "$title" --description "$description" --type "$type" --version "$version" --logo "$logo"
                   fi
                   cd ../
               fi
           done          
           IFS="$original_ifs"
-
-
 
       - name: Commit changes
         run: |

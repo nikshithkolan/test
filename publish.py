@@ -44,7 +44,6 @@ def validate_args(args):
     if not os.path.exists(repo_dir):
         print('Error: path "{0}" does not exist'.format(repo_dir))
         sys.exit(-1)    
-    print(args.repo_dir, args.type, args.logo, args.name, args.title, args.description, args.version)
     if args.type not in ('component', 'solution'): 
         print('Error: The --type arg must be either "component" or "solution"')
         sys.exit(-1)
@@ -112,7 +111,7 @@ def update_manifest(temp_dir, args):
 
 def package_ssp(args, temp_dir):
     directory = pathlib.Path(temp_dir)
-    zip_file = os.path.join(args.repo_dir, "{0}-{1}-{2}.ssp".format(args.name, args.type, args.version))
+    zip_file = os.path.join(args.repo_dir, "{0}-{1}-{2}-packaged.ssp".format(args.name, args.type, args.version))
 
     with ZipFile(zip_file, 'w', ZIP_DEFLATED, compresslevel=9) as archive:
         for path in directory.rglob('*'):
