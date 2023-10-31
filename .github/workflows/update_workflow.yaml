@@ -63,12 +63,13 @@ jobs:
                       else
                           echo "Current Working Directory: $(pwd)"
                           echo "logo.png not found in $folder"
-                          echo "Listing files in $folder:"
-                          ls -lah "$folder"
+                          echo "Listing files"
+                          ls -lah 
                           exit 1
                       fi
-                  
-                      if [ -z "$repo" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] ; then
+
+                      echo $folder $type $name $title $description $version
+                      if [ -z "$folder" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] ; then
                           echo "Error: One or more required fields are empty or not found in $manifest_file"
                           exit 1
                       fi
