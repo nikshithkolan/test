@@ -26,7 +26,7 @@ jobs:
       - name: Install jq
         run: sudo apt install  -y imagemagick jq
 
-      - name: Install requstes
+      - name: Install requests
         run: pip3 install -r requirements.txt
 
       - name: Publish to Marketplace
@@ -43,6 +43,8 @@ jobs:
                   echo "file: $file"
                   folder=$(dirname "$file")
                   echo "folder: $folder"
+                  echo "Current Working Directory: $(pwd)"
+
                   manifest_file="manifest.json"   
                   if [ -f "$manifest_file" ]; then
                       echo "inside manifest"
