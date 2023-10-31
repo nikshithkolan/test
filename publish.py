@@ -39,10 +39,11 @@ def validate_publish_args(args):
         sys.exit(-1)
 
 def validate_args(args):
+    print("validate_args")
     repo_dir = args.repo_dir
     if not os.path.exists(repo_dir):
         print('Error: path "{0}" does not exist'.format(repo_dir))
-        sys.exit(-1)
+        sys.exit(-1)    
     print(args.repo_dir, args.type, args.logo, args.name, args.title, args.description, args.version)
     if args.type not in ('component', 'solution'): 
         print('Error: The --type arg must be either "component" or "solution"')
