@@ -49,16 +49,13 @@ jobs:
                   manifest_file="manifest.json"   
                   if [ -f "$manifest_file" ]; then
                       echo "inside manifest"
-                      typee=$(jq -r '.schema' "$manifest_file")
-                      echo "typee: $typee" 
-
-                      type="component"
+                      type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
                       name=$(jq -r '.name' "$manifest_file")
                       title=$(jq -r '.title' "$manifest_file")
                       description=$(jq -r '.description' "$manifest_file")
                       version=$(jq -r '.version' "$manifest_file")
 
-                      logo="$folder/logo.png"
+                      logo="logo.png"
                       if [[ -f "$logo" ]]; then
                           # Resize logo.png to 240x240 pixels
                           convert "$logo" -resize 240x240! "$logo"
