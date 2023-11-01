@@ -11,10 +11,18 @@ on:
       - '**/logo.png'
       - '**/logo.jpeg'
       - '**/logo.jpg'     
-permissions: 
-  actions: write
-  contents: write
-   
+
+permissions:
+  contents: write # for checkout & releases
+  pull-requests: write # for comments
+  packages: write # for publish
+
+
+env:
+  MARKETPLACE_INTERNAL_URL: "https://marketplace-internal.swimlane.io"  
+  MARKETPLACE_USERNAME: "swimlane"
+  MARKETPLACE_PASSWORD: "f3Juc5p#QWd2$@kzuM"
+
 jobs:
   version-the-ssp:
     runs-on: ubuntu-latest
@@ -78,7 +86,7 @@ jobs:
                           echo "Error: One or more required fields are empty or not found in $manifest_file"
                           exit 1
                       fi
-                      python ../publish.py --repo-dir "$repo" --title "$title" --name "$name" --title "$title" --description "$description" --type "$type" --version "$version" --logo "$logo"
+                      python ../publish.py --repo-dir "$repo" --title "$title" --name "$name" --title "$title" --description "$description" --type "$type" --version "$version" --logo "$logo" --publish {{ env.MARKETPLACE_INTERNAL_URL }} --username {{ env.MARKETPLACE_USERNAME }} --password {{ env.MARKETPLACE_PASSWORD }}
                   fi
                   cd ../
               fi
@@ -92,5 +100,3 @@ jobs:
           git add -A
           git commit -m "Created version" || echo "No changes to commit"
           git push
-
-
