@@ -13,6 +13,7 @@ on:
       - '**/logo.jpg'     
 permissions: 
   actions: write
+  contents: write
    
 jobs:
   version-the-ssp:
