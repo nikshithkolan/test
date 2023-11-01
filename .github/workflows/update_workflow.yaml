@@ -10,16 +10,17 @@ on:
       - '**/manifest.json'
       - '**/logo.png'
       - '**/logo.jpeg'
-      - '**/logo.jpg'      
+      - '**/logo.jpg'     
+permissions: 
+  actions: write
+   
 jobs:
   version-the-ssp:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: "nikshithkolan/test"
           fetch-depth: 0
-          token : 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
 
       - name: Set up Python
         uses: actions/setup-python@v4
