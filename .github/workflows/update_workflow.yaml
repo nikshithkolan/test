@@ -86,7 +86,7 @@ jobs:
                           echo "Error: One or more required fields are empty or not found in $manifest_file"
                           exit 1
                       fi
-                      python ../publish.py --repo-dir "$repo" --title "$title" --name "$name" --title "$title" --description "$description" --type "$type" --version "$version" --logo "$logo" --publish {{ env.MARKETPLACE_INTERNAL_URL }} --username {{ env.MARKETPLACE_USERNAME }} --password {{ env.MARKETPLACE_PASSWORD }}
+                      python ../publish.py --repo-dir "$repo" --title "$title" --name "$name" --title "$title" --description "$description" --type "$type" --version "$version" --logo "$logo" --publish "{{ env.MARKETPLACE_INTERNAL_URL }}" --username "{{ env.MARKETPLACE_USERNAME }}" --password "{{ env.MARKETPLACE_PASSWORD }}"
                   fi
                   cd ../
               fi
