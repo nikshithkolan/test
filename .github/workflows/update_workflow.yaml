@@ -53,11 +53,11 @@ jobs:
           echo "hello"
           echo "$changed_files"
 
-          for file in $changed_files; do
-              if [[ $file == *.ssp ]]; then
+          for file in "$changed_files"; do
+              if [[ "$file" == *.ssp ]]; then
                   folder=$(dirname "$file")
                   repo_dir="$(pwd)/$folder"
-                  python "${SCRIPT_LOCATION}/publish.py" --repo-dir "$repo_dir" --publish --publish_url "${MARKETPLACE_URL}" --username "${MARKETPLACE_USERNAME}" --password '${MARKETPLACE_PASSWORD}'
+                  python "${SCRIPT_LOCATION}/publish.py" --repo-dir "$repo_dir" --publish --publish_url "${{ env.MARKETPLACE_URL }}" --username "${{ env.MARKETPLACE_USERNAME }}" --password '${{ env.MARKETPLACE_PASSWORD}}'
               fi
           done          
           IFS="$original_ifs"
