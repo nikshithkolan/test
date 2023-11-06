@@ -208,8 +208,8 @@ def main():
 
     print('Saved as {0}'.format(zip_file))
 
-    # if args.publish:
-    #     upload_url = upload_ssp(args, zip_file)
-    #     print('Published {0} to {1}'.format(os.path.basename(zip_file), upload_url))
+    if args.publish:
+        upload_url = upload_ssp(args, zip_file)
+        print('Published {0} to {1}'.format(os.path.basename(zip_file), upload_url))
 
 main()

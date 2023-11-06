@@ -1,9 +1,9 @@
 {
     "schema": "component/1",
     "author": "Swimlane",
-    "name": "google_workspace_get_alerts",
-    "title": "Google Workspace Get Alerts",
+    "name": "test_vic",
+    "title": "test_vic",
     "version": "1.0.0",
-    "description": "Google Workspace Get Alerts"
+    "description": "Test VIC to test component publishing"
 }
   
