@@ -19,6 +19,7 @@ permissions:
 
 env:
   MARKETPLACE_URL: "https://marketplace.swimlane.com" 
+  SCRIPT_LOCATION: ".github/workflows/scripts"
 
 jobs:
   version-the-ssp:
@@ -57,9 +58,9 @@ jobs:
                   repo_dir=$(pwd)/$folder
                   echo $repo_dir $folder
                   ls -lah
+                  script_location=
 
-
-                  python scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
+                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
                   # cd -
                   # manifest_file="manifest.json"
                   
