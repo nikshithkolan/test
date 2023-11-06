@@ -53,7 +53,8 @@ jobs:
           echo "hello"
           echo "$changed_files"
 
-          for file in "$changed_files"; do
+          for file in $changed_files; do
+              echo "$file"
               if [[ "$file" == *.ssp ]]; then
                   folder=$(dirname "$file")
                   repo_dir="$(pwd)/$folder"
