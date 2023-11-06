@@ -48,6 +48,7 @@ jobs:
           original_ifs="$IFS"
           IFS=$'\n'
           changed_files=$(git diff --name-only HEAD~1 HEAD)
+          echo "hello"
 
           for file in $changed_files; do
               if [[ $file == *.ssp ]]; then
@@ -55,13 +56,14 @@ jobs:
                   cd $folder
                   repo_dir=$(pwd)
 
-                  python scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
-                  manifest_file="manifest.json"
+                  python ../scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
+                  cd -
+                  # manifest_file="manifest.json"
                   
-                  if ! [ -f "$manifest_file" ]; then
-                      echo "Error: manifest file is required."
-                      exit 1
-                  else 
+                  # if ! [ -f "$manifest_file" ]; then
+                  #     echo "Error: manifest file is required."
+                  #     exit 1
+                  # else 
                       # type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
                       # name=$(jq -r '.name' "$manifest_file")
                       # title=$(jq -r '.title' "$manifest_file")
@@ -81,13 +83,13 @@ jobs:
                       # fi
 
                       # echo $folder $type $name $title $description $version
-                      if [ -z "$folder" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] ; then
-                          echo "Error: One or more required fields are empty or not found in $manifest_file"
-                          exit 1
-                      fi
-                      ls -lah
-                      cd ../
-                      python ../scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
+                      # if [ -z "$folder" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] ; then
+                      #     echo "Error: One or more required fields are empty or not found in $manifest_file"
+                      #     exit 1
+                      # fi
+                      # ls -lah
+                      # cd ../
+                      # python ../scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
                   fi
               fi
           done          
