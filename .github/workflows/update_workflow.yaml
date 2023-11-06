@@ -20,6 +20,8 @@ permissions:
 env:
   MARKETPLACE_URL: "https://marketplace.swimlane.com" 
   SCRIPT_LOCATION: ".github/workflows/scripts"
+  MARKETPLACE_USERNAME: swimlane
+  MARKETPLACE_PASSWORD: f3Juc5p#QWd2$@kzuM
 
 jobs:
   version-the-ssp:
@@ -58,9 +60,9 @@ jobs:
                   repo_dir=$(pwd)/$folder
                   echo $repo_dir $folder
                   ls -lah
-                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" 
+                  # python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" 
 
-                  # python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
+                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ env.MARKETPLACE_USERNAME }} --password ${{ env.MARKETPLACE_PASSWORD }}
                   fi
           done          
           IFS="$original_ifs"
