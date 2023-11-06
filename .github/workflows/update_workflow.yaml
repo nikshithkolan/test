@@ -57,7 +57,8 @@ jobs:
                   folder=$(dirname "$file")
                   echo "$folder"
                   repo_dir="$(pwd)/$folder"
-                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir '$repo_dir' --publish --publish_url '${{ env.MARKETPLACE_URL }}'  --username '${{ env.MARKETPLACE_USERNAME }}' --password '${{ env.MARKETPLACE_PASSWORD }}'
+                  echo "$repo_dir""
+                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url '${{ env.MARKETPLACE_URL }}'  --username '${{ env.MARKETPLACE_USERNAME }}' --password '${{ env.MARKETPLACE_PASSWORD }}'
                   fi
           done          
           IFS="$original_ifs"
