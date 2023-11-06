@@ -91,7 +91,6 @@ jobs:
                       # cd ../
                       # python ../scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
                   fi
-              fi
           done          
           IFS="$original_ifs"
 
