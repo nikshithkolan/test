@@ -56,6 +56,8 @@ jobs:
                   # cd $folder
                   repo_dir=$(pwd)/$folder
                   echo $repo_dir $folder
+                  ls -lah $repo_dir
+
 
                   python scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
                   # cd -
