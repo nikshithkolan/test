@@ -2,9 +2,8 @@ name: Update version
 on: 
   push:
     branches:
-      - main
+      - main    
       - branchtest
-    
     paths:
       - '**.ssp'
       - '**/manifest.json'
@@ -32,6 +31,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
+
       # prerequisites
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -45,7 +45,6 @@ jobs:
         run: pip3 install -r requirements.txt          
 
       # publish
-
       - name: Publish to Marketplace
         run: |
           original_ifs="$IFS"
@@ -56,13 +55,8 @@ jobs:
           for file in $changed_files; do
               if [[ $file == *.ssp ]]; then
                   folder=$(dirname "$file")
-                  # cd $folder
                   repo_dir=$(pwd)/$folder
-                  echo $repo_dir $folder
-                  ls -lah
-                  # python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" 
-                  echo '${{ env.MARKETPLACE_PASSWORD }}'
-                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url "${{ env.MARKETPLACE_URL }}"  --username "${{ env.MARKETPLACE_USERNAME }}" --password '${{ env.MARKETPLACE_PASSWORD }}'
+                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir '$repo_dir' --publish --publish_url '${{ env.MARKETPLACE_URL }}'  --username '${{ env.MARKETPLACE_USERNAME }}' --password '${{ env.MARKETPLACE_PASSWORD }}'
                   fi
           done          
           IFS="$original_ifs"

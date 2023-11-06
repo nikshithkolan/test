@@ -49,14 +49,12 @@ def validate_publish_args(args):
         sys.exit(-1)
 
 def validate_args(args):
-    print("validate_args")
     repo_dir = args.repo_dir
 
     if not os.path.exists(repo_dir):
         print('Error: path "{0}" does not exist'.format(repo_dir))
         sys.exit(-1)
 
-    # os.chdir(repo_dir)     
     dir_list = os.listdir(repo_dir)
 
     if not 'manifest.json' in dir_list:
@@ -100,7 +98,6 @@ def find_ssp_file(repo_dir):
     return ssp_file
 
 
-
 def extract_ssp_file_to_temp_dir(ssp_file):
     temp_dir = tempfile.mkdtemp()
     with ZipFile(ssp_file, 'r') as zip_ref:
@@ -122,8 +119,6 @@ def update_manifest(temp_dir, args):
 
     manifest = json.load(open(manifest_file))
     repo_manifest = json.load(open(repo_manifest_file))     
-    print(repo_manifest_file)
-    print(repo_manifest)
     VIC.type = repo_manifest.get('schema')[:-2].lower()
     VIC.name = repo_manifest.get('name')
     VIC.description = repo_manifest.get('description')
@@ -187,14 +182,15 @@ def upload_ssp(args, filename):
         "User-Agent": "gh-actions",
         'Authorization': 'bearer ' + token
     }
-    response = requests.post(upload_url, files=payload, headers=headers)
+    print(upload_url)
+    print(payload)
+    #response = requests.post(upload_url, files=payload, headers=headers)
 
-    if response.status_code != 201: # Is there a requests.codes alias for 201?
-        print('Error: Unable to upload SSP to {0}'.format(upload_url))
-        sys.exit(-1)
+    # if response.status_code != 201: # Is there a requests.codes alias for 201?
+    #     print('Error: Unable to upload SSP to {0}'.format(upload_url))
+    #     sys.exit(-1)
 
     return upload_url
-    # return "success"
 
 def main():
     args = parser.parse_args()
