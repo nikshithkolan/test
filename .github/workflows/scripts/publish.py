@@ -159,7 +159,7 @@ def package_ssp(args, temp_dir):
     return zip_file
 
 def upload_ssp(args, filename):
-    print(args.password)
+    # print(args.password)
     
     # import requests
     # publish_url = "https://marketplace.swimlane.com"
@@ -180,28 +180,29 @@ def upload_ssp(args, filename):
     
     
     
-    # publish_url = args.publish_url
-    # # Need to exchange username/password for auth token before we can upload
-    # loginHeaders =  {
-    # "Accept": "application/json",
-    # "Content-Type": "application/json",
-    # "User-Agent": "gh-actions",
-    # }
-    # login_url = '{0}/api/auth/login'.format(publish_url)
-    # auth = {'username': args.username, 'password': args.password}
-    # print(login_url)
-    # print(args.username)
+    publish_url = args.publish_url
+    # Need to exchange username/password for auth token before we can upload
+    loginHeaders =  {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "gh-actions",
+    }
+    login_url = '{0}/api/auth/login'.format(publish_url)
+    auth = {'username': args.username, 'password': args.password}
+    print(login_url)
+    print(args.username)
+    print(args.password)
     
-    # response = requests.post(login_url, json=auth, headers=loginHeaders)
+    response = requests.post(login_url, json=auth, headers=loginHeaders)
 
-    # print(response.status_code)
-    # if response.status_code != requests.codes.ok:
-    #     print('Error: Unable to login to {0}'.format(publish_url))
-    #     sys.exit(-1)
+    print(response.status_code)
+    if response.status_code != requests.codes.ok:
+        print('Error: Unable to login to {0}'.format(publish_url))
+        sys.exit(-1)
 
-    # json_response = response.json()
-    # token = json_response["accessToken"]
-    # print(token)
+    json_response = response.json()
+    token = json_response["accessToken"]
+    print(token)
 
     # # Upload the actual SSP
     # uri_fragment = 'components' if args.type == 'component' else 'solutions'
