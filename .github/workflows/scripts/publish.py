@@ -6,21 +6,28 @@ import pathlib
 import requests
 import sys
 import tempfile
+from glob import glob
 
 from zipfile import ZipFile, ZIP_DEFLATED
 
 parser = argparse.ArgumentParser(description='Packages up a solution/component SSP')
 parser.add_argument('--repo-dir',    required=True,  help='Full path in the repo where the solution/component is located', type=pathlib.Path)
-parser.add_argument('--title',       required=True,  help='The title of the solution/component')
-parser.add_argument('--description', required=True,  help='The title of the solution/component')
-parser.add_argument('--name',        required=True,  help='The name of the solution/component')
-parser.add_argument('--type',        required=True,  help='Either "component" or "solution"')
-parser.add_argument('--logo',        required=True,  help='Full path to the logo to use')
-parser.add_argument('--version',     required=True,  help='Version of the content')
+# parser.add_argument('--title',       required=True,  help='The title of the solution/component')
+# parser.add_argument('--description', required=True,  help='The title of the solution/component')
+# parser.add_argument('--name',        required=True,  help='The name of the solution/component')
+# parser.add_argument('--type',        required=True,  help='Either "component" or "solution"')
+# parser.add_argument('--logo',        required=True,  help='Full path to the logo to use')
+# parser.add_argument('--version',     required=True,  help='Version of the content')
 parser.add_argument('--publish', action='store_true',help='Whether or not to publish the content to Marketplace')
 parser.add_argument('--publish_url')
 parser.add_argument('--username')
 parser.add_argument('--password')
+name = ""
+title = ""
+description = ""
+_type = ""
+logo = ""
+version = ""
 
 def validate_publish_args(args):
     if args.publish is not True:
@@ -41,13 +48,35 @@ def validate_publish_args(args):
 def validate_args(args):
     print("validate_args")
     repo_dir = args.repo_dir
+
     if not os.path.exists(repo_dir):
         print('Error: path "{0}" does not exist'.format(repo_dir))
-        sys.exit(-1)    
-    if args.type not in ('component', 'solution'): 
-        print('Error: The --type arg must be either "component" or "solution"')
         sys.exit(-1)
 
+    os.chdir(repo_dir)     
+    dir_list = os.listdir()
+
+    if not 'manifest.json' in dir_list:
+        print('Error: manifest.json does not exist in "{0}"'.format(repo_dir))
+        sys.exit(-1)
+    
+    _logo = glob('logo*')
+    if len(_logo) == 0:
+        print('Error: logo does not exist in "{0}"'.format(repo_dir))
+        sys.exit(-1)
+
+    if len(_logo) > 1:
+        print('Error: multiple logo files exist in "{0}"'.format(repo_dir))
+        sys.exit(-1)        
+        
+    if not 'README.md' in dir_list:
+        print('Error: no README.md file found in "{0}"'.format(repo_dir))
+        sys.exit(-1)
+
+    if not 'documentation.README.md' in dir_list:
+        print('Error: no documentation.README.md file found in "{0}"'.format(repo_dir))
+        sys.exit(-1)
+    
     validate_publish_args(args)
 
 def find_ssp_file(repo_dir):
@@ -75,26 +104,19 @@ def get_base64_encoded_file_contents(path):
         return base64.b64encode(file.read()).decode('utf-8')
 
 def update_manifest(temp_dir, args):
+    print('tempdir files')
+    print(os.listdir())
+    
     manifest_file = os.path.join(temp_dir, 'manifest.json')
     if not os.path.exists(manifest_file):
         print('Error: path "{0}" does not contain a manifest.json file'.format(args.repo_dir))
         sys.exit(-1)
 
-    readme_file = os.path.join(args.repo_dir, 'README.md')
-    if not os.path.exists(readme_file):
-        print('Error: no README.md file found in "{0}"'.format(args.repo_dir))
-        sys.exit(-1)
-
-    docs_file = os.path.join(args.repo_dir, 'documentation.README.md')
-    if not os.path.exists(docs_file):
-        print('Error: no documentation.README.md file found in "{0}"'.format(args.repo_dir))
-        sys.exit(-1)
-
-    if not os.path.exists(args.logo):
-        print('Error: logo file "{0}" does not exist'.format(args.logo))
-        sys.exit(-1)
-
     manifest = json.load(open(manifest_file))
+    _type =  manifest.get('type')
+    if not _type.startswith('component') or not _type.startswith('solution'):         
+        print('Error: The --type arg must be either "component" or "solution"')
+        sys.exit(-1)
 
     manifest['schema'] = 'component/1' if args.type == 'component' else 'solution/1'
     manifest['author'] = 'Swimlane'
@@ -143,7 +165,12 @@ def upload_ssp(args, filename):
     uri_fragment = 'components' if args.type == 'component' else 'solutions'
     upload_url = '{0}/api/indexing/{1}'.format(publish_url, uri_fragment)
     payload = {'file': open(filename, 'rb')}
-    headers = {'Authorization': 'bearer ' + token}
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "gh-actions",
+        'Authorization': 'bearer ' + token
+    }
     response = requests.post(upload_url, files=payload, headers=headers)
 
     if response.status_code != 201: # Is there a requests.codes alias for 201?
@@ -154,6 +181,7 @@ def upload_ssp(args, filename):
 
 def main():
     args = parser.parse_args()
+    
     validate_args(args)
 
     ssp_file = find_ssp_file(args.repo_dir)

@@ -17,81 +17,75 @@ permissions:
   pull-requests: write # for comments
   packages: write # for publish
 
-
 env:
-  MARKETPLACE_INTERNAL_URL: "https://marketplace-internal.swimlane.io"  
-  MARKETPLACE_USERNAME: "swimlane"
-  MARKETPLACE_PASSWORD: "f3Juc5p#QWd2$@kzuM"
+  MARKETPLACE_URL: "https://marketplace.swimlane.com" 
 
 jobs:
   version-the-ssp:
     runs-on: ubuntu-latest
-    # outputs:
-    #   marketplace-url: ${{ env.MARKETPLACE_INTERNAL_URL }}
-    #   username: ${{ env.MARKETPLACE_USERNAME }}
-    #   password: ${{ env.MARKETPLACE_PASSWORD }}
-      
     steps:
+      # checkout 
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
-
+      # prerequisites
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      
+
       - name: Install jq
-        run: sudo apt install  -y imagemagick jq
+        run: sudo apt install -y imagemagick jq
 
       - name: Install requests
-        run: pip3 install -r requirements.txt
+        run: pip3 install -r requirements.txt          
+
+      # prerequisites
 
       - name: Publish to Marketplace
         run: |
-          echo "starting for loop"
           original_ifs="$IFS"
-
           IFS=$'\n'
-
           changed_files=$(git diff --name-only HEAD~1 HEAD)
 
           for file in $changed_files; do
               if [[ $file == *.ssp ]]; then
-                  # echo "file: $file"
                   folder=$(dirname "$file")
-                  # echo "folder: $folder"
-                  # echo "Current Working Directory: $(pwd)"
-                  ls -a
                   cd $folder
-                  repo=$(pwd)
-                  manifest_file="manifest.json"   
-                  if [ -f "$manifest_file" ]; then
-                      type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
-                      name=$(jq -r '.name' "$manifest_file")
-                      title=$(jq -r '.title' "$manifest_file")
-                      description=$(jq -r '.description' "$manifest_file")
-                      version=$(jq -r '.version' "$manifest_file")
-                      logo="logo.png"
+                  repo_dir=$(pwd)
 
-                      if [[ -f "$logo" ]]; then
-                          convert "$logo" -resize 240x240! "$logo"
-                          echo "Resized logo.png to 240x240 pixels"
-                      else
-                          echo "Current Working Directory: $(pwd)"
-                          echo "logo.png not found in $folder"
-                          echo "Listing files"
-                          ls -lah 
-                          exit 1
-                      fi
+                  python scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
+                  manifest_file="manifest.json"
+                  
+                  if ! [ -f "$manifest_file" ]; then
+                      echo "Error: manifest file is required."
+                      exit 1
+                  else 
+                      # type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
+                      # name=$(jq -r '.name' "$manifest_file")
+                      # title=$(jq -r '.title' "$manifest_file")
+                      # description=$(jq -r '.description' "$manifest_file")
+                      # version=$(jq -r '.version' "$manifest_file")
+                      # logo=$(ls -a | grep "^logo" | awk '/logo\.png$|logo\.jpeg$|logo\.jpg$/ {print; exit}')
+
+                      # if [[ -f "$logo" ]]; then
+                      #     convert "$logo" -resize 240x240! "$logo"
+                      #     echo "Resized logo.png to 240x240 pixels"
+                      # else
+                      #     echo "Current Working Directory: $(pwd)"
+                      #     echo "logo.png not found in $folder"
+                      #     echo "Listing files"
+                      #     ls -lah 
+                      #     exit 1
+                      # fi
 
                       # echo $folder $type $name $title $description $version
                       if [ -z "$folder" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] ; then
                           echo "Error: One or more required fields are empty or not found in $manifest_file"
                           exit 1
                       fi
-                      python ../publish.py --repo-dir "$repo" --title "$title" --name "$name" --title "$title" --description "$description" --type "$type" --version "$version" --logo "$logo" --publish --publish_url ${{ env.MARKETPLACE_INTERNAL_URL }}  --username ${{ env.MARKETPLACE_USERNAME }} --password ${{ env.MARKETPLACE_PASSWORD }}
+                      python scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
                   fi
                   cd ../
               fi
@@ -103,5 +97,5 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A
-          git commit -m "Created version" || echo "No changes to commit"
+          git commit -m "Versioned Bundle" || echo "No changes to commit"
           git push
