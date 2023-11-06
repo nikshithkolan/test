@@ -51,17 +51,14 @@ jobs:
           IFS=$'\n'
           changed_files=$(git diff --name-only HEAD~1 HEAD)
           echo "hello"
-          echo $changed_files
+          echo "$changed_files"
 
           for file in $changed_files; do
               if [[ $file == *.ssp ]]; then
-                  folder=$(dirname $file)
-                  echo "$folder"
-                  echo "$pwd"
+                  folder=$(dirname "$file")
                   repo_dir="$(pwd)/$folder"
-                  echo "$repo_dir""
-                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url '${{ env.MARKETPLACE_URL }}'  --username '${{ env.MARKETPLACE_USERNAME }}' --password '${{ env.MARKETPLACE_PASSWORD }}'
-                  fi
+                  python "${SCRIPT_LOCATION}/publish.py" --repo-dir "$repo_dir" --publish --publish_url "${MARKETPLACE_URL}" --username "${MARKETPLACE_USERNAME}" --password '${MARKETPLACE_PASSWORD}'
+              fi
           done          
           IFS="$original_ifs"
 
