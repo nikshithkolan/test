@@ -168,9 +168,6 @@ def upload_ssp(args, filename):
     }
     login_url = '{0}/api/auth/login'.format(publish_url)
     auth = {'username': args.username, 'password': args.password}
-    print(login_url)
-    print(args.username)
-    print(args.password)
     
     response = requests.post(login_url, json=auth, headers=loginHeaders)
 
@@ -181,25 +178,19 @@ def upload_ssp(args, filename):
 
     json_response = response.json()
     token = json_response["accessToken"]
-    print(token)
-
-    print(filename)
     # Upload the actual SSP
     uri_fragment = 'components' if VIC.type == 'component' else 'solutions'
     upload_url = '{0}/api/indexing/{1}'.format(publish_url, uri_fragment)
     payload = {'file': open(filename, 'rb')}
     headers = {
         "Accept": "application/json",
-        "Content-Type": "application/json",
         "User-Agent": "gh-actions",
         'Authorization': 'bearer ' + token
     }
-    print(payload)
     response = requests.post(upload_url, files=payload, headers=headers)
 
     if response.status_code != 201: # Is there a requests.codes alias for 201?
         print('Error: Unable to upload SSP to {0}'.format(upload_url))
-        print(response.text)
         sys.exit(-1)
 
     return upload_url
