@@ -131,7 +131,7 @@ def update_manifest(temp_dir, args):
     VIC.title = repo_manifest.get('title')
     print(VIC.type)
 
-    if VIC.type != "component" or VIC.type != "solution":         
+    if not (VIC.type == "component" or VIC.type != "solution"):         
         print('Error: The manifest type must be either "component" or "solution"')
         sys.exit(-1)
 
