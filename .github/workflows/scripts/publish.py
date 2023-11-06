@@ -159,23 +159,24 @@ def package_ssp(args, temp_dir):
     return zip_file
 
 def upload_ssp(args, filename):
+    print(args.password)
     
-    import requests
-    publish_url = "https://marketplace.swimlane.com"
-    # Need to exchange username/password for auth token before we can upload
-    loginHeaders =  {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "User-Agent": "gh-actions",
-    }
-    login_url = '{0}/api/auth/login'.format(publish_url)
-    auth = {'username': "swimlane", 'password': "f3Juc5p#QWd2$@kzuM"}
-    print(login_url)
+    # import requests
+    # publish_url = "https://marketplace.swimlane.com"
+    # # Need to exchange username/password for auth token before we can upload
+    # loginHeaders =  {
+    # "Accept": "application/json",
+    # "Content-Type": "application/json",
+    # "User-Agent": "gh-actions",
+    # }
+    # login_url = '{0}/api/auth/login'.format(publish_url)
+    # auth = {'username': "swimlane", 'password': "f3Juc5p#QWd2$@kzuM"}
+    # print(login_url)
 
-    response = requests.post(login_url, json=auth, headers=loginHeaders)
-    print(response.status_code)
+    # response = requests.post(login_url, json=auth, headers=loginHeaders)
+    # print(response.status_code)
     
-    return "success"
+    # return "success"
     
     
     
