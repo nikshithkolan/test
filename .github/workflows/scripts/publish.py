@@ -3,6 +3,7 @@ import base64
 import json
 import os
 import pathlib
+from pyclbr import Class
 import requests
 import sys
 import tempfile
@@ -10,24 +11,26 @@ from glob import glob
 
 from zipfile import ZipFile, ZIP_DEFLATED
 
+class VIC:
+    name = ""
+    title = ""
+    description = ""
+    type = ""
+    logo = ""
+    readme = ""
+    doc_readme = ""
+    version = ""
+    manifest = ""
+        
+    def __init__(self) -> None:        
+        pass
+
 parser = argparse.ArgumentParser(description='Packages up a solution/component SSP')
 parser.add_argument('--repo-dir',    required=True,  help='Full path in the repo where the solution/component is located', type=pathlib.Path)
-# parser.add_argument('--title',       required=True,  help='The title of the solution/component')
-# parser.add_argument('--description', required=True,  help='The title of the solution/component')
-# parser.add_argument('--name',        required=True,  help='The name of the solution/component')
-# parser.add_argument('--type',        required=True,  help='Either "component" or "solution"')
-# parser.add_argument('--logo',        required=True,  help='Full path to the logo to use')
-# parser.add_argument('--version',     required=True,  help='Version of the content')
 parser.add_argument('--publish', action='store_true',help='Whether or not to publish the content to Marketplace')
 parser.add_argument('--publish_url')
 parser.add_argument('--username')
 parser.add_argument('--password')
-name = ""
-title = ""
-description = ""
-_type = ""
-logo = ""
-version = ""
 
 def validate_publish_args(args):
     if args.publish is not True:
@@ -53,13 +56,14 @@ def validate_args(args):
         print('Error: path "{0}" does not exist'.format(repo_dir))
         sys.exit(-1)
 
-    os.chdir(repo_dir)     
-    dir_list = os.listdir()
+    # os.chdir(repo_dir)     
+    dir_list = os.listdir(repo_dir)
 
     if not 'manifest.json' in dir_list:
         print('Error: manifest.json does not exist in "{0}"'.format(repo_dir))
-        sys.exit(-1)
-    
+        sys.exit(-1)        
+    VIC.manifest = os.path.join(repo_dir, 'manifest.json')
+
     _logo = glob('logo*')
     if len(_logo) == 0:
         print('Error: logo does not exist in "{0}"'.format(repo_dir))
@@ -68,14 +72,17 @@ def validate_args(args):
     if len(_logo) > 1:
         print('Error: multiple logo files exist in "{0}"'.format(repo_dir))
         sys.exit(-1)        
+    VIC.logo = os.path.join(repo_dir, _logo[0])
         
     if not 'README.md' in dir_list:
         print('Error: no README.md file found in "{0}"'.format(repo_dir))
         sys.exit(-1)
+    VIC.readme = os.path.join(repo_dir, 'README.md')
 
     if not 'documentation.README.md' in dir_list:
         print('Error: no documentation.README.md file found in "{0}"'.format(repo_dir))
         sys.exit(-1)
+    VIC.doc_readme = os.path.join(repo_dir, 'documentation.README.md')
     
     validate_publish_args(args)
 
@@ -92,6 +99,8 @@ def find_ssp_file(repo_dir):
 
     return ssp_file
 
+
+
 def extract_ssp_file_to_temp_dir(ssp_file):
     temp_dir = tempfile.mkdtemp()
     with ZipFile(ssp_file, 'r') as zip_ref:
@@ -104,36 +113,42 @@ def get_base64_encoded_file_contents(path):
         return base64.b64encode(file.read()).decode('utf-8')
 
 def update_manifest(temp_dir, args):
-    print('tempdir files')
-    print(os.listdir())
     
     manifest_file = os.path.join(temp_dir, 'manifest.json')
+    repo_manifest_file = VIC.manifest
     if not os.path.exists(manifest_file):
         print('Error: path "{0}" does not contain a manifest.json file'.format(args.repo_dir))
         sys.exit(-1)
 
     manifest = json.load(open(manifest_file))
-    _type =  manifest.get('type')
-    if not _type.startswith('component') or not _type.startswith('solution'):         
-        print('Error: The --type arg must be either "component" or "solution"')
+    repo_manifest = json.load(open(repo_manifest_file))     
+    
+    VIC.type = repo_manifest.get('type')
+    VIC.name = repo_manifest.get('name')
+    VIC.description = repo_manifest.get('description')
+    VIC.version = repo_manifest.get('version')
+    VIC.title = repo_manifest.get('title')
+
+    if not VIC.type.startswith('component') or not VIC.type.startswith('solution'):         
+        print('Error: The manifest type must be either "component" or "solution"')
         sys.exit(-1)
 
-    manifest['schema'] = 'component/1' if args.type == 'component' else 'solution/1'
+    manifest['schema'] = 'component/1' if VIC.type == 'component' else 'solution/1'
     manifest['author'] = 'Swimlane'
-    manifest['name'] = args.name
-    manifest['title'] = args.title
-    manifest['version'] = args.version
-    manifest['description'] = args.description
-    manifest['readme'] = get_base64_encoded_file_contents(readme_file)
-    manifest['docs'] = get_base64_encoded_file_contents(docs_file)
-    manifest['iconImage'] = get_base64_encoded_file_contents(args.logo)
+    manifest['name'] = VIC.name
+    manifest['title'] = VIC.title
+    manifest['version'] = VIC.version
+    manifest['description'] = VIC.description
+    manifest['readme'] = get_base64_encoded_file_contents(VIC.readme)
+    manifest['docs'] = get_base64_encoded_file_contents(VIC.doc_readme)
+    manifest['iconImage'] = get_base64_encoded_file_contents(VIC.logo)
 
     with open(manifest_file, "w") as output:
         output.write(json.dumps(manifest, indent=2))
 
 def package_ssp(args, temp_dir):
     directory = pathlib.Path(temp_dir)
-    zip_file = os.path.join(args.repo_dir, "{0}-{1}-{2}-packaged.ssp".format(args.name, args.type, args.version))
+    zip_file = os.path.join(args.repo_dir, "{0}-{1}-{2}-packaged.ssp".format(VIC.name, VIC.type, VIC.version))
 
     with ZipFile(zip_file, 'w', ZIP_DEFLATED, compresslevel=9) as archive:
         for path in directory.rglob('*'):
@@ -191,8 +206,8 @@ def main():
 
     print('Saved as {0}'.format(zip_file))
 
-    if args.publish:
-        upload_url = upload_ssp(args, zip_file)
-        print('Published {0} to {1}'.format(os.path.basename(zip_file), upload_url))
+    # if args.publish:
+    #     upload_url = upload_ssp(args, zip_file)
+    #     print('Published {0} to {1}'.format(os.path.basename(zip_file), upload_url))
 
 main()

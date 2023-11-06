@@ -42,7 +42,7 @@ jobs:
       - name: Install requests
         run: pip3 install -r requirements.txt          
 
-      # prerequisites
+      # publish
 
       - name: Publish to Marketplace
         run: |
@@ -59,39 +59,6 @@ jobs:
                   echo $repo_dir $folder
                   ls -lah
                   python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
-                  # cd -
-                  # manifest_file="manifest.json"
-                  
-                  # if ! [ -f "$manifest_file" ]; then
-                  #     echo "Error: manifest file is required."
-                  #     exit 1
-                  # else 
-                      # type=$(jq -r '.schema' "$manifest_file" | cut -d'/' -f1)
-                      # name=$(jq -r '.name' "$manifest_file")
-                      # title=$(jq -r '.title' "$manifest_file")
-                      # description=$(jq -r '.description' "$manifest_file")
-                      # version=$(jq -r '.version' "$manifest_file")
-                      # logo=$(ls -a | grep "^logo" | awk '/logo\.png$|logo\.jpeg$|logo\.jpg$/ {print; exit}')
-
-                      # if [[ -f "$logo" ]]; then
-                      #     convert "$logo" -resize 240x240! "$logo"
-                      #     echo "Resized logo.png to 240x240 pixels"
-                      # else
-                      #     echo "Current Working Directory: $(pwd)"
-                      #     echo "logo.png not found in $folder"
-                      #     echo "Listing files"
-                      #     ls -lah 
-                      #     exit 1
-                      # fi
-
-                      # echo $folder $type $name $title $description $version
-                      # if [ -z "$folder" ] || [ -z "$type" ] || [ -z "$name" ] || [ -z "$title" ] || [ -z "$description" ] || [ -z "$version" ] ; then
-                      #     echo "Error: One or more required fields are empty or not found in $manifest_file"
-                      #     exit 1
-                      # fi
-                      # ls -lah
-                      # cd ../
-                      # python ../scripts/publish.py --repo-dir "$repo_dir" --publish --publish_url ${{ env.MARKETPLACE_URL }}  --username ${{ secrets.MARKETPLACE_USERNAME }} --password ${{ secrets.MARKETPLACE_PASSWORD }}
                   fi
           done          
           IFS="$original_ifs"
