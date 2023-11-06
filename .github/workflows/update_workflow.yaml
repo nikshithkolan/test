@@ -20,8 +20,8 @@ permissions:
 env:
   MARKETPLACE_URL: "https://marketplace.swimlane.com" 
   SCRIPT_LOCATION: ".github/workflows/scripts"
-  MARKETPLACE_USERNAME: swimlane
-  MARKETPLACE_PASSWORD: f3Juc5p#QWd2$@kzuM
+  MARKETPLACE_USERNAME: "swimlane"
+  MARKETPLACE_PASSWORD: "f3Juc5p#QWd2$@kzuM"
 
 jobs:
   version-the-ssp:
