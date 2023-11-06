@@ -51,6 +51,7 @@ jobs:
           IFS=$'\n'
           changed_files=$(git diff --name-only HEAD~1 HEAD)
           echo "hello"
+          echo $changed_files
 
           for file in $changed_files; do
               if [[ $file == *.ssp ]]; then
