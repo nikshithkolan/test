@@ -204,8 +204,8 @@ def upload_ssp(args, filename):
     token = json_response["accessToken"]
     print(token)
 
-    # # Upload the actual SSP
-    # uri_fragment = 'components' if args.type == 'component' else 'solutions'
+    # Upload the actual SSP
+    # uri_fragment = 'components' if VIC.type == 'component' else 'solutions'
     # upload_url = '{0}/api/indexing/{1}'.format(publish_url, uri_fragment)
     # payload = {'file': open(filename, 'rb')}
     # headers = {
@@ -221,6 +221,7 @@ def upload_ssp(args, filename):
     #     sys.exit(-1)
 
     # return upload_url
+    return "success"
 
 def main():
     args = parser.parse_args()
