@@ -52,7 +52,7 @@ jobs:
           changed_files=$(git diff --name-only HEAD~1 HEAD)
           echo "hello"
 
-          for file in "$changed_files"; do
+          for file in $changed_files; do
               if [[ "$file" == *.ssp ]]; then
                   folder=$(dirname $file)
                   echo "$folder"
