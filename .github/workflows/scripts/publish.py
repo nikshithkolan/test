@@ -122,7 +122,8 @@ def update_manifest(temp_dir, args):
 
     manifest = json.load(open(manifest_file))
     repo_manifest = json.load(open(repo_manifest_file))     
-    
+    print(repo_manifest_file)
+    print(repo_manifest)
     VIC.type = repo_manifest.get('type')
     VIC.name = repo_manifest.get('name')
     VIC.description = repo_manifest.get('description')
