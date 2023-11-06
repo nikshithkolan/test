@@ -47,19 +47,20 @@ jobs:
       # publish
       - name: Publish to Marketplace
         run: |
-          original_ifs="$IFS"
+          original_ifs='$IFS'
           IFS=$'\n'
           changed_files=$(git diff --name-only HEAD~1 HEAD)
           echo "hello"
 
-          for file in $changed_files; do
+          for file in '$changed_files'; do
               if [[ $file == *.ssp ]]; then
-                  folder=$(dirname "$file")
-                  repo_dir=$(pwd)/$folder
+                  folder=$(dirname '$file')
+                  echo '$folder'
+                  repo_dir='$(pwd)/$folder'
                   python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir '$repo_dir' --publish --publish_url '${{ env.MARKETPLACE_URL }}'  --username '${{ env.MARKETPLACE_USERNAME }}' --password '${{ env.MARKETPLACE_PASSWORD }}'
                   fi
           done          
-          IFS="$original_ifs"
+          IFS='$original_ifs'
 
       - name: Commit changes
         run: |
