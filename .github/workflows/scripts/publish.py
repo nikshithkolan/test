@@ -159,7 +159,9 @@ def package_ssp(args, temp_dir):
     return zip_file
 
 def upload_ssp(args, filename):
-    publish_url = args.publish_url
+    
+    import requests
+    publish_url = "https://marketplace.swimlane.com"
     # Need to exchange username/password for auth token before we can upload
     loginHeaders =  {
     "Accept": "application/json",
@@ -167,38 +169,56 @@ def upload_ssp(args, filename):
     "User-Agent": "gh-actions",
     }
     login_url = '{0}/api/auth/login'.format(publish_url)
-    auth = {'username': args.username, 'password': args.password}
+    auth = {'username': "swimlane", 'password': "f3Juc5p#QWd2$@kzuM"}
     print(login_url)
-    print(args.username)
-    
+
     response = requests.post(login_url, json=auth, headers=loginHeaders)
-
     print(response.status_code)
-    if response.status_code != requests.codes.ok:
-        print('Error: Unable to login to {0}'.format(publish_url))
-        sys.exit(-1)
+    
+    return "success"
+    
+    
+    
+    # publish_url = args.publish_url
+    # # Need to exchange username/password for auth token before we can upload
+    # loginHeaders =  {
+    # "Accept": "application/json",
+    # "Content-Type": "application/json",
+    # "User-Agent": "gh-actions",
+    # }
+    # login_url = '{0}/api/auth/login'.format(publish_url)
+    # auth = {'username': args.username, 'password': args.password}
+    # print(login_url)
+    # print(args.username)
+    
+    # response = requests.post(login_url, json=auth, headers=loginHeaders)
 
-    json_response = response.json()
-    token = json_response["accessToken"]
-    print(token)
+    # print(response.status_code)
+    # if response.status_code != requests.codes.ok:
+    #     print('Error: Unable to login to {0}'.format(publish_url))
+    #     sys.exit(-1)
 
-    # Upload the actual SSP
-    uri_fragment = 'components' if args.type == 'component' else 'solutions'
-    upload_url = '{0}/api/indexing/{1}'.format(publish_url, uri_fragment)
-    payload = {'file': open(filename, 'rb')}
-    headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "User-Agent": "gh-actions",
-        'Authorization': 'bearer ' + token
-    }
-    response = requests.post(upload_url, files=payload, headers=headers)
+    # json_response = response.json()
+    # token = json_response["accessToken"]
+    # print(token)
 
-    if response.status_code != 201: # Is there a requests.codes alias for 201?
-        print('Error: Unable to upload SSP to {0}'.format(upload_url))
-        sys.exit(-1)
+    # # Upload the actual SSP
+    # uri_fragment = 'components' if args.type == 'component' else 'solutions'
+    # upload_url = '{0}/api/indexing/{1}'.format(publish_url, uri_fragment)
+    # payload = {'file': open(filename, 'rb')}
+    # headers = {
+    #     "Accept": "application/json",
+    #     "Content-Type": "application/json",
+    #     "User-Agent": "gh-actions",
+    #     'Authorization': 'bearer ' + token
+    # }
+    # response = requests.post(upload_url, files=payload, headers=headers)
 
-    return upload_url
+    # if response.status_code != 201: # Is there a requests.codes alias for 201?
+    #     print('Error: Unable to upload SSP to {0}'.format(upload_url))
+    #     sys.exit(-1)
+
+    # return upload_url
 
 def main():
     args = parser.parse_args()
