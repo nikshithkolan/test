@@ -129,6 +129,7 @@ def update_manifest(temp_dir, args):
     VIC.description = repo_manifest.get('description')
     VIC.version = repo_manifest.get('version')
     VIC.title = repo_manifest.get('title')
+    print(VIC.type)
 
     if not VIC.type.startswith('component') or not VIC.type.startswith('solution'):         
         print('Error: The manifest type must be either "component" or "solution"')
