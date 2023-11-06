@@ -53,7 +53,7 @@ jobs:
           echo "hello"
 
           for file in $changed_files; do
-              if [[ "$file" == *.ssp ]]; then
+              if [[ $file == *.ssp ]]; then
                   folder=$(dirname $file)
                   echo "$folder"
                   echo "$pwd"
