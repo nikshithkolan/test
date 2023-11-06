@@ -168,8 +168,12 @@ def upload_ssp(args, filename):
     }
     login_url = '{0}/api/auth/login'.format(publish_url)
     auth = {'username': args.username, 'password': args.password}
+    print(login_url)
+    print(args.username)
+    
     response = requests.post(login_url, json=auth, headers=loginHeaders)
 
+    print(response.status_code)
     if response.status_code != requests.codes.ok:
         print('Error: Unable to login to {0}'.format(publish_url))
         sys.exit(-1)
