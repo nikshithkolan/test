@@ -124,7 +124,7 @@ def update_manifest(temp_dir, args):
     repo_manifest = json.load(open(repo_manifest_file))     
     print(repo_manifest_file)
     print(repo_manifest)
-    VIC.type = repo_manifest.get('type')
+    VIC.type = repo_manifest.get('schema')[:-2]
     VIC.name = repo_manifest.get('name')
     VIC.description = repo_manifest.get('description')
     VIC.version = repo_manifest.get('version')
