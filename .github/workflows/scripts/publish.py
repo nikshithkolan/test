@@ -64,11 +64,11 @@ def validate_args(args):
         sys.exit(-1)        
     VIC.manifest = os.path.join(repo_dir, 'manifest.json')
 
-    _logo = glob('logo*')
+
+    _logo = glob(os.path.join(args.repo_dir, 'logo*'))
     if len(_logo) == 0:
         print('Error: logo does not exist in "{0}"'.format(repo_dir))
         sys.exit(-1)
-
     if len(_logo) > 1:
         print('Error: multiple logo files exist in "{0}"'.format(repo_dir))
         sys.exit(-1)        
