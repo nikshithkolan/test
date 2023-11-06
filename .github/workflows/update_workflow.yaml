@@ -61,8 +61,8 @@ jobs:
                   echo $repo_dir $folder
                   ls -lah
                   # python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" 
-
-                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url "${{ env.MARKETPLACE_URL }}"  --username "${{ env.MARKETPLACE_USERNAME }}" --password "${{ env.MARKETPLACE_PASSWORD }}"
+                  echo '${{ env.MARKETPLACE_PASSWORD }}'
+                  python ${{ env.SCRIPT_LOCATION }}/publish.py --repo-dir "$repo_dir" --publish --publish_url "${{ env.MARKETPLACE_URL }}"  --username "${{ env.MARKETPLACE_USERNAME }}" --password '${{ env.MARKETPLACE_PASSWORD }}'
                   fi
           done          
           IFS="$original_ifs"
